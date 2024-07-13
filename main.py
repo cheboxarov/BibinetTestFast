@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from databases import Database
 import os
 import json
@@ -14,6 +14,7 @@ DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 database = Database(DATABASE_URL)
 
 app = FastAPI()
+router = APIRouter(prefix="/fastapi")
 
 
 @app.on_event("startup")
@@ -26,7 +27,7 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.post("/fastapi/search/part/")
+@router.post("/search/part/")
 async def search_parts(body: dict):
     mark_name = body.get('mark_name')
     part_name = body.get('part_name')
